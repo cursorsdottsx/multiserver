@@ -37,6 +37,11 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+ipcRenderer.on("themeChange", (e, theme: string | undefined) => {
+    if (theme === "dark") document.body.classList.add("dark");
+    else document.body.classList.remove("dark");
+});
+
 contextBridge.exposeInMainWorld("ipc", {
     newInstanceWindow: () => ipcRenderer.send("newInstanceWindow"),
     editInstanceWindow: (name: string) =>
@@ -94,12 +99,6 @@ window.onbeforeunload = () => {
 
 contextBridge.exposeInMainWorld("log", log.functions);
 contextBridge.exposeInMainWorld("ipcRenderer", ipcRenderer);
-
-contextBridge.exposeInMainWorld("theme", {
-    currentTheme: () => getSettings().theme,
-    makeDark: () => document.body.classList.add("dark"),
-    makeLight: () => document.body.classList.remove("dark"),
-});
 
 contextBridge.exposeInMainWorld("settings", {
     get: () =>
