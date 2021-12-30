@@ -3,19 +3,13 @@
 
 import { contextBridge, ipcRenderer } from "electron";
 import log from "electron-log";
-
-import {
-    getSettings,
-    setTheme,
-    setDefaultJavaPath,
-    setDefaultJvmArgs,
-} from "./lib/settings";
+import { getSettings } from "./lib/settings";
 import type {
     InstanceInfo,
     IpcChannels,
-    ServerIpc,
     IpcSettings,
     MultiserverSettings,
+    ServerIpc,
 } from "./types";
 
 // theme based on app setting
@@ -23,20 +17,21 @@ const theme = getSettings().theme;
 
 window.addEventListener("DOMContentLoaded", () => {
     if (theme === "dark") {
-        document.body.classList.add("dark");
+        document.querySelector("html")!.classList.add("dark");
     } else if (theme === "light") {
-        document.body.classList.remove("dark");
+        document.querySelector("html")!.classList.remove("dark");
     } else {
         // auto dark/light mode based on OS settings
         const query = matchMedia("(prefers-color-scheme: dark)");
 
-        if (query.matches) document.body.classList.add("dark");
+        if (query.matches)
+            document.querySelector("html")!.classList.add("dark");
 
         query.addEventListener("change", (e) => {
             if (e.matches) {
-                document.body.classList.add("dark");
+                document.querySelector("html")!.classList.add("dark");
             } else {
-                document.body.classList.remove("dark");
+                document.querySelector("html")!.classList.remove("dark");
             }
         });
     }
